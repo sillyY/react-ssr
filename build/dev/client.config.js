@@ -6,12 +6,13 @@ const {
 
 //定一个通用的路径转换方法
 const resolve = (pathStr) => path.resolve(__dirname, pathStr);
+
 module.exports = {
   mode: 'development',
-  entry: resolve( __dirname, '../../src/client/app/index.tsx'), //入口文件
+  entry: resolve('../../src/client/app/index.tsx'), //入口文件
   output: {
     filename: 'index.js', //设置打包后的文件名
-    path: resolve(__dirname, '../../dist/static'), //设置构建结果的输出目录
+    path: resolve('../../dist/static'), //设置构建结果的输出目录
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -29,7 +30,7 @@ module.exports = {
   },
   plugins: [
     new TsConfigPathsPlugin({
-      configFileName: path.resolve(__dirname, '../../client.tsconfig.json'),
+      configFileName: resolve('../../client.tsconfig.json'),
     }),
     new CheckerPlugin(),
   ],

@@ -8,11 +8,11 @@ const {
 const resolve = (pathStr) => path.resolve(__dirname, pathStr);
 module.exports = {
   mode: 'development',
-  entry: resolve(__dirname, '../../src/server/app/index.ts'), //入口文件
+  entry: resolve('../../src/server/app/index.ts'), //入口文件
   target: 'node',
   output: {
     filename: 'index.js', //设置打包后的文件名
-    path: resolve(__dirname, '../../dist/app'), //设置构建结果的输出目录
+    path: resolve('../../dist/app'), //设置构建结果的输出目录
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -30,7 +30,7 @@ module.exports = {
   },
   plugins: [
     new TsConfigPathsPlugin({
-      configFileName: path.resolve(__dirname, '../../tsconfig.json'),
+      configFileName: resolve('../../tsconfig.json'),
     }),
     new CheckerPlugin(),
   ],

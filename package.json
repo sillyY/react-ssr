@@ -4,10 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "client:watch": "webpack --config build/dev/client.config.js --watch",
     "bd:client": "webpack --config build/dev/client.config.js",
     "bd:server": "webpack --config build/dev/server.config.js",
-    "view": "node dist/app/index.js",
-    "start": "npm-run-all --parallel bd:client bd:server --serial view"
+    "svr:watch": "node scripts/svr-code-watch.js",
+    "start": "node scripts/start.js",
+    "dev": "node scripts/start.js"
   },
   "dependencies": {
     "koa": "^2.12.0",
@@ -22,6 +24,7 @@
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "awesome-typescript-loader": "^5.2.1",
+    "chalk": "^4.0.0",
     "typescript": "^3.9.3",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
