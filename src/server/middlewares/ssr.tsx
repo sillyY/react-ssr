@@ -1,6 +1,9 @@
 import React from 'react';
 import Index from '../../client/pages/index';
+import getAssets from '../common/assets';
 import { renderToString } from 'react-dom/server';
+
+const assetsMap = getAssets();
 
 export default (ctx: any, next: any) => {
   const html = renderToString(<Index />);
@@ -9,6 +12,7 @@ export default (ctx: any, next: any) => {
 <head>
   <meta charset="UTF-8">
   <title>my react ssr</title>
+  ${assetsMap.css.join('')}
 </head>
 <body>
   <div id="root">
@@ -17,6 +21,7 @@ export default (ctx: any, next: any) => {
 </body>
 </html>
 <script type="text/javascript"  src="index.js"></script>
+${assetsMap.js.join('')}
 `;
 
   return next();

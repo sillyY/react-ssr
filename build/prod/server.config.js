@@ -1,6 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const {
   CheckerPlugin,
   TsConfigPathsPlugin,
@@ -16,11 +18,14 @@ module.exports = merge(baseConfig, {
   entry: resolve('../../src/server/app/index.ts'), //入口文件
   target: 'node',
   output: {
-    filename: 'index.js', //设置打包后的文件名
+    filename: 'js/[name].[chunkhash:8].js', //设置打包后的文件名
     path: resolve('../../dist/app'), //设置构建结果的输出目录
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      '@': resolve('../../dist'),
+    },
   },
   module: {
     rules: [
@@ -39,8 +44,39 @@ module.exports = merge(baseConfig, {
     }),
     new CheckerPlugin(),
     new webpack.DefinePlugin({
-      'process.env': { NODE_ENV: '"development"' },
-      __IS_PROD__: false,
+      process_env: { NODE_ENV: 'production' },
+      _IS_PROD_: true,
+    }),
+    new ManifestPlugin({
+      filename: '../app/asset-manifest.json',
     }),
   ],
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          compresee: {
+            drop_console: true,
+            drop_debugger: true,
+          },
+          warnings: false,
+          ie8: true,
+          output: {
+            comments: false,
+          },
+        },
+        cache: true,
+        sourceMap: false,
+      }),
+    ],
+    splitChunks: {
+      cacheGroups: {
+        libs: {
+          test: /node_modules/,
+          chunks: 'initial',
+          name: 'libs',
+        },
+      },
+    },
+  },
 });

@@ -2,6 +2,9 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
 const {
   CheckerPlugin,
   TsConfigPathsPlugin,
@@ -16,29 +19,8 @@ module.exports = merge(baseConfig, {
   mode: 'development',
   entry: resolve('../../src/client/app/index.tsx'), //入口文件
   output: {
-    filename: 'index.js', //设置打包后的文件名
+    filename: 'js/[name].[chunkhash:8].js', //设置打包后的文件名
     path: resolve('../../dist/static'), //设置构建结果的输出目录
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: 'css-loader',
-          },
-          {
-            loader: 'postcss-loader',
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      },
-    ],
   },
   plugins: [
     new TsConfigPathsPlugin({
@@ -46,20 +28,41 @@ module.exports = merge(baseConfig, {
     }),
     new CheckerPlugin(),
     new webpack.DefinePlugin({
-      'process.env': { NODE_ENV: '"development"' },
-      __IS_PROD__: false,
+      process_env: { NODE_ENV: 'production' },
+      _IS_PROD_: true,
+    }),
+    new MiniCssExtractPlugin({
+      //设置 css
+      filename: 'css/[name].[contenthash:8].css',
     }),
   ],
   optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          compresee: {
+            drop_console: true,
+            drop_debugger: true
+          },
+          warnings: false,
+          ie8: true,
+          output: {
+            comments: false
+          }
+        },
+        cache: true,
+        sourceMap: false
+      }),
+      new OptimizeCSSAssetsPlugin()
+    ],
     splitChunks: {
       cacheGroups: {
         libs: {
-          // 抽离第三方库
-          test: /node_modules/, // 指定是node_modules下的第三方包
+          test: /node_modules/,
           chunks: 'initial',
-          name: 'libs', // 打包后的文件名，任意命名
-        },
-      },
-    },
-  },
+          name: 'libs'
+        }
+      }
+    }
+  }
 });
