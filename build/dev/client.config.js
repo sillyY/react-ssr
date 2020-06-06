@@ -16,8 +16,9 @@ module.exports = merge(baseConfig, {
   mode: 'development',
   entry: resolve('../../src/client/app/index.tsx'), //入口文件
   output: {
-    filename: 'index.js', //设置打包后的文件名
+    filename: '[name].js', //设置打包后的文件名
     path: resolve('../../dist/static'), //设置构建结果的输出目录
+    publicPath: 'http://localhost:9002/',
   },
   module: {
     rules: [

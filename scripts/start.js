@@ -1,7 +1,7 @@
 const { spawn } = require('child_process');
 const CONSTANTCODE = require('./constant');
 const chalk = require('chalk');
-const proConfig = require('../build/config');
+const proConfig = require('../build/config/config');
 
 const log = console.log;
 
@@ -9,7 +9,7 @@ const nodeServerPort = proConfig.nodeServerPort;
 
 log(chalk.red('server starting...'));
 
-const feCodeWatchProcess = spawn('npm', ['run', 'client:watch'], {
+const feCodeWatchProcess = spawn('npm', ['run', 'wds:watch'], {
   stdio: 'inherit',
   shell: process.platform === 'win32',
 });
@@ -32,7 +32,7 @@ const print = (data) => {
     //接收到服务端代码编译完成的通知
     startNodeServer(); //重启 node 服务
   } else {
-    console.log(str);
+    log(str);
   }
 };
 

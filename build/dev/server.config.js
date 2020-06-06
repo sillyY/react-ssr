@@ -17,10 +17,14 @@ module.exports = merge(baseConfig, {
   target: 'node',
   output: {
     filename: 'index.js', //设置打包后的文件名
-    path: resolve('../../dist/app'), //设置构建结果的输出目录
+    path: resolve('../../dist/server'), //设置构建结果的输出目录
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    alias: {
+      //定义dist 目录别名，方便导入模块
+      '@dist': path.resolve(__dirname, '../dist'),
+    },
   },
   module: {
     rules: [
